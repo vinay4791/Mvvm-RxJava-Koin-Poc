@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RxJavaKoinPOC</string>
+
+
+    <string name="loading_error_txt">An error occurred while loading data !!! \n Please check your network connectivity.</string>
+
+    <string name="no_internet_connection_message">No Internet Connection</string>
+    <string name="server_error">Server Error</string>
+    <string name="unknown_error">Unknown Error</string>
+
+    <string name="u_txt">(U)</string>
+    <string name="a_txt">(A)</string>
+
+    <string name="null_url_blank_string">null_url_blank_string</string>
+    <string name="null_string">Undefined</string>
+
+</resources>

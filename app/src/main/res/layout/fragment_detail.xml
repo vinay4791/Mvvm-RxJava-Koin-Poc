@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="movie"
+            type="com.example.rxjavakoinpoc.movies.viewstate.MoviesInfo" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/news_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imageUrl='@{movie.imageUrl != null ? movie.imageUrl : @string/null_url_blank_string}'
+            android:scaleType="fitXY"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/transparent_to_black_gradient" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="@dimen/movie_details_side_spacing"
+            android:layout_marginLeft="@dimen/movie_details_side_spacing"
+            android:layout_marginEnd="@dimen/movie_details_side_spacing"
+            android:layout_marginRight="@dimen/movie_details_side_spacing"
+            android:layout_marginBottom="@dimen/movie_details_side_spacing">
+
+            <TextView
+                android:id="@+id/description_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text='@{movie.overview != null ? movie.overview : @string/null_string}'
+                android:textColor="@color/movies_descrition_textcolor"
+                android:textSize="@dimen/medium_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Description Text " />
+
+            <TextView
+                android:id="@+id/original_language_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text='@{movie.popularity != 0.0 ? "Popularity - " + movie.popularity : @string/null_string}'
+                android:textColor="@color/movies_text_color"
+                android:textSize="@dimen/large_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/description_tv"
+                app:layout_constraintEnd_toStartOf="@+id/date_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="CNN" />
+
+            <TextView
+                android:id="@+id/date_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text='@{movie.date != null ? movie.date : @string/null_string}'
+                android:textColor="@color/movies_text_color"
+                android:textSize="@dimen/large_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/description_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="2019-12-19" />
+
+            <TextView
+                android:id="@+id/movie_details_headline_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/movie_details_headlines_bottom_spacing"
+                android:text='@{movie.title != null ? movie.title : @string/null_string}'
+                android:textColor="@color/movies_title_white"
+                android:textSize="@dimen/extra_large_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/original_language_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Headlines" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>
