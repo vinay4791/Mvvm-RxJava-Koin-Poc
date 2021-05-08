@@ -1,11 +1,17 @@
 package com.example.rxjavakoinpoc.movies.viewstate
 
 import android.os.Parcelable
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.rxjavakoinpoc.util.Constants.EMPTY_STRING
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@Entity(tableName = "movie_table")
 data class MoviesInfo(
+    @PrimaryKey @ColumnInfo @NonNull val id: String,
     val title: String,
     val adultRated: Boolean,
     val language: String,
@@ -18,6 +24,7 @@ data class MoviesInfo(
 ) : Parcelable {
     companion object {
         val EMPTY = MoviesInfo(
+            id = EMPTY_STRING,
             title = EMPTY_STRING,
             adultRated = false,
             language = EMPTY_STRING,

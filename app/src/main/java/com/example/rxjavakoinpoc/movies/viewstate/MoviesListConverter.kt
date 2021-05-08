@@ -17,6 +17,7 @@ class MoviesListConverter : Converter<ApiMoviesListResponse, MoviesListViewState
 
     private fun getMoviesInfo(movieResult: Results): MoviesInfo {
         return MoviesInfo(
+            id = movieResult.id.toString().orEmpty(),
             title = movieResult.original_title.orEmpty(),
             adultRated = movieResult.adult ?: false,
             language = movieResult.original_language.orEmpty(),
