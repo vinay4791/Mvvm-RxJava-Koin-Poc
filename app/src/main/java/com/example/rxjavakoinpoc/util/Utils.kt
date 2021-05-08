@@ -1,39 +1,36 @@
 package com.example.rxjavakoinpoc.util
 
 import android.content.Context
-import android.text.TextUtils
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 
-/*
-Function for loading an imageurl to an imageview
- */
-fun ImageView.loadImage(uri: String?, progressDrawable: CircularProgressDrawable) {
-    val requestOptions = RequestOptions().fitCenter()
-    Glide.with(context).load(uri).apply(requestOptions)
-        .into(this)
-}
+const val WIFI = "WIFI"
+const val MOBILE = "MOBILE"
 
-/*
-Function called when a imageurl is set to an imageview in layout
- */
-@BindingAdapter("android:imageUrl")
-fun loadImage(view: ImageView, url: String) {
-    if (!TextUtils.isEmpty(url)) {
-        url?.let { view.loadImage("https://image.tmdb.org/t/p/w780" + url, getProgressDrawable(view.context)) }
+class Utils(private val appContext: Context) {
+    fun hasInternet(): Boolean {
+        val connectivityManager = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+                ?: return false
+            return when {
+                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+        } else {
+            var haveConnectedWifi = false
+            var haveConnectedMobile = false
+            val netInfo = connectivityManager.allNetworkInfo
+            for (ni in netInfo) {
+                if (ni.typeName.equals(WIFI, ignoreCase = true)) if (ni.isConnected) haveConnectedWifi = true
+                if (ni.typeName.equals(MOBILE, ignoreCase = true)) if (ni.isConnected) haveConnectedMobile = true
+            }
+            return haveConnectedWifi || haveConnectedMobile
+        }
     }
+
 }
 
-/*
-Function returns a circular progress drawable
- */
-fun getProgressDrawable(context: Context): CircularProgressDrawable {
-    return CircularProgressDrawable(context).apply {
-        strokeWidth = 10f
-        centerRadius = 50f
-        start()
-    }
-}

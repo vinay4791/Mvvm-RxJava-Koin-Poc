@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rxjavakoinpoc.R
+import com.example.rxjavakoinpoc.api.ErrorType
 import com.example.rxjavakoinpoc.base.BaseFragment
 import com.example.rxjavakoinpoc.movies.adapter.MoviesListAdapter
 import com.example.rxjavakoinpoc.movies.viewstate.MoviesInfo
@@ -39,6 +41,8 @@ class MoviesListFragment : BaseFragment() {
 
     private fun initialize() {
         observeMoviesListData()
+        observeErrorResponseData()
+        observeLoadingStateData()
         fetchMoviesListData()
     }
 
@@ -46,28 +50,46 @@ class MoviesListFragment : BaseFragment() {
         viewModel.fetchMoviesList(API_KEY, DEFAULT_LANGUAGE, INITIAL_PAGE)
     }
 
-    private fun observeMoviesListData() {
-        viewModel.moviesListData().observe(viewLifecycleOwner, Observer { viewState ->
-            when(viewState){
-                is MoviesListViewState.Loading -> showApiLoadingIndicator()
-                is MoviesListViewState.Success -> showMoviesListData(viewState.moviesInfoList)
-                is MoviesListViewState.Error -> showError()
+    private fun observeLoadingStateData() {
+        viewModel.loadingStateData().observe(viewLifecycleOwner, Observer { loadingViewState ->
+            if(loadingViewState){
+                showApiLoadingIndicator()
+            } else {
+                hideApiLoadingIndicator()
             }
         })
     }
 
+    private fun observeErrorResponseData() {
+        viewModel.errorResponseData().observe(viewLifecycleOwner, Observer { viewState ->
+            showError()
+        })
+    }
+
+    private fun observeMoviesListData() {
+        viewModel.moviesListData().observe(viewLifecycleOwner, Observer { moviesListData ->
+            showMoviesListData(moviesListData)
+        })
+    }
+
     private fun showError() {
-        Log.d("vinay","showError")
+        Log.d("vinay", "showError")
     }
 
     private fun showMoviesListData(moviesInfoList: List<MoviesInfo>) {
+        Log.d("vinay", "showMoviesListData")
+
         moviesList.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         moviesList.adapter = moviesListAdapter
         moviesListAdapter.setItems(moviesInfoList)
     }
 
     private fun showApiLoadingIndicator() {
-        Log.d("vinay","showApiLoadingIndicator")
+        Log.d("vinay", "showApiLoadingIndicator")
+    }
+
+    private fun hideApiLoadingIndicator() {
+        Log.d("vinay", "hideApiLoadingIndicator")
     }
 
 }

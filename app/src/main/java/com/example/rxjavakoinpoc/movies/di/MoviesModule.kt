@@ -26,11 +26,11 @@ val moviesModule = module {
     }
 
     factory {
-        MoviesListRepository(get(), MoviesListConverter(), AndroidSchedulingStrategyFactory.io())
+        MoviesListRepository(get(), MoviesListConverter(), get(), get(), AndroidSchedulingStrategyFactory.io())
     }
 
     viewModel {
-        MoviesListViewModel(get())
+        MoviesListViewModel(get(), get())
     }
 }
 

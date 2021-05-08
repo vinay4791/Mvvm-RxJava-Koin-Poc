@@ -1,10 +1,13 @@
 package com.example.rxjavakoinpoc.movies
 
+import android.util.Log
 import com.example.rxjavakoinpoc.api.ErrorType
+import com.example.rxjavakoinpoc.db.MovieDb
 import com.example.rxjavakoinpoc.movies.backend.MoviesApiFetcher
 import com.example.rxjavakoinpoc.movies.viewstate.MoviesListConverter
 import com.example.rxjavakoinpoc.movies.viewstate.MoviesListViewState
 import com.example.rxjavakoinpoc.rx.SchedulingStrategyFactory
+import com.example.rxjavakoinpoc.util.Utils
 import com.squareup.moshi.JsonEncodingException
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -16,6 +19,8 @@ import io.reactivex.functions.Function
 class MoviesListRepository constructor(
     private val moviesApiFetcher: MoviesApiFetcher,
     private val moviesListConverter: MoviesListConverter,
+    private val moviesDb: MovieDb,
+    private val utils: Utils,
     private val schedulingStrategyFactory: SchedulingStrategyFactory
 ) {
 
@@ -23,14 +28,24 @@ class MoviesListRepository constructor(
                         language: String,
                         page: Int): Observable<MoviesListViewState> {
 
-        val moviesApiFetcherObservable = moviesApiFetcher.
-        getMovies(getMovieListFetchQueryMap(api_key, language, page)).toObservable()
-
-      return moviesApiFetcherObservable
-            .map(moviesListConverter)
-            .startWith(MoviesListViewState.Loading)
-            .compose(ErrorConverter())
-            .compose(schedulingStrategyFactory.create())
+        if(utils.hasInternet()){
+            val moviesApiFetcherObservable = moviesApiFetcher.
+            getMovies(getMovieListFetchQueryMap(api_key, language, page)).toObservable()
+            return moviesApiFetcherObservable
+                .map(moviesListConverter)
+                .startWith(MoviesListViewState.Loading)
+                .compose(ErrorConverter())
+                .compose(schedulingStrategyFactory.create())
+        } else{
+            Log.d("vinay", "no internet")
+            val moviesApiFetcherObservable = moviesApiFetcher.
+            getMovies(getMovieListFetchQueryMap(api_key, language, page)).toObservable()
+            return moviesApiFetcherObservable
+                .map(moviesListConverter)
+                .startWith(MoviesListViewState.Loading)
+                .compose(ErrorConverter())
+                .compose(schedulingStrategyFactory.create())
+        }
 
     }
 
